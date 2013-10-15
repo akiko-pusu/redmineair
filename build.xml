@@ -6,12 +6,11 @@
      ====================================================================== -->
 <project name="redmineAir" basedir="." default="package">
 
-	<property file="build.properties" />
-
-	<!-- SDK properties -->
-	<property name="ADL" value="${AIR_HOME}/bin/adl.exe"/>
-	<property name="ADT.JAR" value="${AIR_HOME}/lib/adt.jar"/>
-	<property name="FLEX_HOME" location="C:/FlexSDK"/>
+	<!-- SDK properties / Please set the SDK path via ENV parameter -->
+    <property environment="env" />
+	<property name="ADL" value="${env.AIR_HOME}/bin/adl"/>
+	<property name="ADT.JAR" value="${env.AIR_HOME}/lib/adt.jar"/>
+	<property name="FLEX_HOME" location="${env.FLEX_HOME}"/>
 	<property name="MXMLC.JAR" value="${FLEX_HOME}/lib/mxmlc.jar"/>
 
 	<!-- Project properties -->
@@ -101,16 +100,19 @@
 	<!-- Unit test -->
 	<target name="test" depends="compile">
 		<!-- Execute TestRunner.swf as FlexUnit tests and publish reports -->
-		<flexunit player="air" 
+		<flexunit player="air"
            workingDir="${bin}"
 		   toDir="${report}" 
-		   haltonfailure="false" 
-		   verbose="true">
+		   haltonfailure="false"
+		   verbose="true" localtrusted="true"
+                >
 		   <source dir="${APP_SRC_DIR}" />
 	       <testSource dir="${APP_TEST_DIR}">
 	          <include name="**/*Test.as" />
 	       </testSource>
-	       <library dir="${APP_ROOT_DIR}/libs" />
+	       <library dir="${APP_ROOT_DIR}/libs">
+            <include name="*.swc" />
+           </library>
 	    </flexunit>
 
 		<!-- Generate readable JUnit-style reports -->
@@ -120,7 +122,15 @@
 			</fileset>
 			<report format="frames" todir="${report}/html" />
 		</junitreport>
-	</target>	
+	</target>
+
+
+    <!-- Open the Flexcover Viewer -->
+    <target name="flexcover-open">
+        <exec executable="${FLEX_COVER_VIEWER}" spawn="true">
+            <arg line="-output ${FLEXUNIT_REPORT_DIR}report.cvr ${BUILD_DIR}/${APP_FILE_BASE_NAME}.cvm" />
+        </exec>
+    </target>
 
 	<target name="package" depends="compile">
 		<java jar="${ADT.JAR}" fork="true" failonerror="true">
@@ -128,9 +138,9 @@
 			<arg value="-storetype"/>
 			<arg value="${STORETYPE}"/>
 			<arg value="-keystore"/>
-			<arg value="${KEYSTORE}"/>
+			<arg value="redmineAir.p12"/>
 			<arg value="-storepass"/>
-			<arg value="${password}"/>
+			<arg value="petyakutya"/>
 			<arg value="${release}/${AIR_NAME}"/>
 			<arg value="${APP_DESCRIPTOR}"/>
 

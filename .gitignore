@@ -1,2 +1,9 @@
 
 bin-debug
+release
+bin
+.idea
+redmineair.xml
+redmineAir.iml
+redmineair.properties
+report

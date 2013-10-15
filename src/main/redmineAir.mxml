@@ -67,6 +67,7 @@
 					</mx:Form>					
 					<mx:DataGrid id="dgAssigned" width="95%" height="300" change="displayIssueInfo(event)" showDataTips="true"
 					             dataTipFunction="showIssueInfo"
+                                 focusOut="{clearEntryDetail(event)}"
 								 dataProvider="{issueXML.issues.issue}" horizontalScrollPolicy="auto" verticalScrollPolicy="auto">
 						<mx:columns>
 							<mx:DataGridColumn width="28" headerText="" paddingLeft="0"
@@ -109,6 +110,7 @@
 						</mx:FormItem>
 					</mx:Form>
 					<mx:DataGrid width="95%" id="dgActivity" height="230" change="{showEntryInfo(event)}"
+                                 focusOut="{clearEntryDetail(event)}"
 								 dataProvider="{activityXML.atom::feed.*::entry}"  horizontalScrollPolicy="auto" verticalScrollPolicy="auto">
 						<mx:columns>
 							<mx:DataGridColumn headerText="Redmine" itemRenderer="com.appspot.redmineAir.view.RedmineIdRenderer" width="120"/>
@@ -121,7 +123,7 @@
 							  paddingTop="4" paddingBottom="4" 
 							  paddingLeft="4" paddingRight="4"
 							  styleName="Panel01">
-						<mx:HTML width="100%" height="220" id="txtEntryDetail" 
+						<mx:HTML width="100%" height="220" id="txtEntryDetail"
 								 styleName="TextArea" verticalScrollPolicy="auto" fontSize="8"/>
 					</mx:Panel>				
 					<mx:LinkButton id="lnkEntry" width="95%" height="30"

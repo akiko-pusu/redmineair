@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<application xmlns="http://ns.adobe.com/air/application/2.0">
+<application xmlns="http://ns.adobe.com/air/application/3.9">
 
     <id>com.appspot.redmineAir</id>
     <filename>redmineair</filename>
     <name>redmineair</name>
-    <version>0.0.5</version>
+    <versionNumber>0.0.5</versionNumber>
 
     <description>
         <text xml:lang="en">RedmineAir: Air application for Redmine which communicate with server via REST api.</text> 
