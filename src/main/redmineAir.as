@@ -70,6 +70,7 @@ private static var icon032:Class;
 [Embed(source="icons/icon_128.png")]
 private static var icon128:Class;
 
+
 private var menuChangeViewMode:ContextMenuItem;
 private var menuExit:NativeMenuItem;
 
@@ -473,12 +474,13 @@ private function applyFilters(event:Event): void
 	}
 	
 	var target:* = this.trRedmine.selectedItem as XML;
-	var aXML:* = this.activityXML.copy();
-	var iXML:* = this.issueXML.copy();
-	var pXML:* = this.projectXML.copy();
+    var aXML:* = this.activityXML;
+    var iXML:* = this.issueXML;
+    var pXML:* = this.projectXML;
 	if (target == null || target.@name == "All") {
-		iList = iXML.children();
-		aList = aXML.atom::feed.entry;
+        this.dgAssigned.dataProvider = issueXML.issues.issue;
+        this.dgActivity.dataProvider = activityXML.atom::feed.*::entry;
+        return;
 	} else {
 		var t:XMLListCollection = new XMLListCollection();
 		var xml:XML;
@@ -614,7 +616,7 @@ public function saveRedmine(event:RedmineEvent):void
 
 	if (event.type == RedmineEvent.ADD) {
 		stmt.text =
-			"INSERT INTO redmine_settings(url, key, feedkey, name) "
+			"INSERT INTO redmine_settings(url, key, feedkey, name, note) "
 			+ "VALUES (:url, :key, :feedkey, :name, :note)";
 	}
 	log.info(stmt.text);
@@ -635,6 +637,14 @@ public function showEntryInfo(event:Event):void
 	var entryXML:XML = event.target.selectedItem as XML;
 	txtEntryDetail.htmlText = entryXML.*::content.toString();
 	lnkEntry.label = URLUtils.correctURL(entryXML.*::id.toString()).substring(0, 50) + '...';
+}
+
+public function clearEntryDetail(event:Event):void
+{
+    txtEntryDetail.htmlText = "";
+    lnkEntry.label = "";
+    txtIssueDetail.htmlText = "";
+
 }
 
 // for handling xml namespace 
@@ -753,25 +763,6 @@ private function translate(key:String):String
 	}
 	return "";	
 }
-
-/*
-private function saveStickies():void
-{
-	if (stickiesDir.exists) stickiesDir.deleteDirectory(true);
-	stickiesDir.createDirectory();
-	
-	for each (var s:Sticky in stickies) {
-		if (s.closed) {
-			continue;
-		}
-		s.setPerment();
-		var item:XML = s.issue;
-		var f:File = stickiesDir.resolvePath(item.ra::redmineId + "-" + s.issueId + ".dat");
-		FileIO.writeObject(f, s);
-		s.close();
-	}	
-}
-*/
 
 private function saveStickiesToDB():void
 {
